@@ -15,7 +15,7 @@
 # include <unistd.h>
 
 # define SUCCESS 0
-# define B 1
+# define ERROR 1
 # define C 126
 # define D 127
 # define E 4096
