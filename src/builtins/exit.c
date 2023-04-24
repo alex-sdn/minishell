@@ -70,7 +70,8 @@ int	ft_exit(t_list **env, t_cmd_lst **cmd_lst, int status, int fake)
 {
 	if (!fake)
 		printf("exit\n");
-	if (cmd_lst && ft_strncmp("exit", (*cmd_lst)->cmds[0], 4) == 0 && (*cmd_lst)->cmds[1])
+	if (cmd_lst && ft_strncmp("exit", (*cmd_lst)->cmds[0], 4) == 0
+		&& (*cmd_lst)->cmds[1] && !fake)
 		status = get_exit_status((*cmd_lst)->cmds);
 	if (status >= 0)
 	{
