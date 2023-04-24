@@ -86,7 +86,7 @@ int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 			i--;
 		}
 	}
-	if (sig_global == 0)
+	if (g_sig == 0)
 		status[1] = 130;
 	return (status[1]);
 }

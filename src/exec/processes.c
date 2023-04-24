@@ -36,7 +36,7 @@ static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *pathcmd)
 		execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
 	while (waitpid(proc_id, &status, WNOHANG) == 0);
 	init_signal(S_DEFAULT);
-	if (sig_global == 0)
+	if (g_sig == 0)
 		return (free(pathcmd), 130);
 	return (free(pathcmd), convert_status(status));
 }

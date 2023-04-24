@@ -10,8 +10,8 @@ static int	get_exit_status(char **cmds)
 		i++;
 	while (cmds[1][++i])
 		if (ft_isdigit(cmds[1][i]) == 0)
-			return (printf_error(ERR_EXIT_1, cmds[1]), 2);
-	status = ft_atoi(cmds[1]);
+			return (printf_error(ERR_EXIT_1, cmds[1]), 2);  //and if i > 20
+	status = ft_atoi(cmds[1]);  //FT_ATOLL !!!!!
 	if (cmds[2])
 		return (printf_error(ERR_EXIT_2, NULL), -1);
 	while (status > 256)

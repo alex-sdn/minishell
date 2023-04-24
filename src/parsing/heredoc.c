@@ -15,14 +15,14 @@ static char	*gnl_heredoc(char *limiter, int loop)
 	char			*new;
 	struct termios	termi_og;
 
-	sig_global = 1;
+	g_sig = 1;
 	tcgetattr(0, &termi_og);
 	swap_termios();
 	init_signal(S_HEREDOC);
 	line = get_next_line(0);
 	init_signal(S_DEFAULT);
 	tcsetattr(0, TCSANOW, &termi_og);
-	if (!line && !sig_global)
+	if (!line && !g_sig)
 		return (NULL);
 	else if (!line && !loop) //msg additionel ? (dans stderr)
 		return (write(1, "\n", 1), ft_strjoin(limiter, "\n"));

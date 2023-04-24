@@ -162,6 +162,6 @@ char	*ft_dup_line(char *str);
 char	*ft_remove_line(char *save);
 char	*get_next_line(int fd);
 
-extern int sig_global;
+extern int	g_sig;
 
 #endif

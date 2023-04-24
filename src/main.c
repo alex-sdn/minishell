@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	sig_global;
+int	g_sig;
 
 void	prompt_loop(t_list **env, t_cmd_lst *cmd_lst, int status)
 {
@@ -8,9 +8,9 @@ void	prompt_loop(t_list **env, t_cmd_lst *cmd_lst, int status)
 
 	while (1)
 	{
-		sig_global--;
+		g_sig--;
 		input = readline("\033[1;32mminishell$\x1B[0m ");
-		if (sig_global < 0)
+		if (g_sig < 0)
 			status = 130;
 		if (!input)
 			ft_exit(env, NULL, 0, 0);
@@ -24,7 +24,7 @@ void	prompt_loop(t_list **env, t_cmd_lst *cmd_lst, int status)
 		free(input);
 		if (cmd_lst)
 		{
-			sig_global = 1;
+			g_sig = 1;
 			status = exec_main(&cmd_lst, env, cmdlst_size(cmd_lst));
 			free_cmd_lst(&cmd_lst);
 		}
@@ -37,7 +37,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	sig_global = 1;
+	g_sig = 1;
 	env = init_env(NULL, envp);
 	if (!env)
 		return (1);

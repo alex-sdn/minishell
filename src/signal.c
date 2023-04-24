@@ -5,18 +5,18 @@ void	handle_sig_dfl(int sig)
 	int	in_cmd;
 
 	in_cmd = 0;
-	if (sig_global > 0)
+	if (g_sig > 0)
 		in_cmd = 1;
 	if (sig == SIGINT)
 	{
-		sig_global = 0;
+		g_sig = 0;
 		rl_replace_line("", 0);
 		write(1, "\n", 1);
 		rl_on_new_line();
 		if (!in_cmd)
 		{
 			rl_redisplay();
-			sig_global = -1;
+			g_sig = -1;
 		}
 	}
 }
@@ -25,7 +25,7 @@ void	handle_sig_heredoc(int sig)
 {
 	if (sig == SIGINT)
 	{
-		sig_global = 0;
+		g_sig = 0;
 		write(2, "^C", 2);
 		rl_replace_line("", 0);
 		write(1, "\n", 1);
