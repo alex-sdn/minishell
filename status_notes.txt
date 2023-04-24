@@ -10,13 +10,12 @@
 
 NOTES:
 
-- pb CTRL+C dans here_doc + ctrl+\ dans cat
+- pb CTRL+C dans here_doc + ctrl+\ dans cat et heredoc
+	(fix normalement, verif a 42)
 
 
 - verif si tous les exit status sont geree
 - error mgmt quand pipe/dup/fork fail moyen, osef ? pareil pour malloc fail
-- +25lignes dans exec_main, peut reduire en faisant les dup2 en fork dans les
-	proc pas solo (mais pb pour perror ET exit apres...) pour pas avoir a save stdin/out
 
 
 export NOT VALID if

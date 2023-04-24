@@ -54,7 +54,14 @@ void	start_process(int i, int **pipes, t_cmd_lst **cmd_lst, t_list **env)
 	loop_process(fd[0], fd[1], cmd_lst, env);
 }
 
-//TROP LONG
+static void	close_pipes(int **pipes, int pos, int cmd_count)
+{
+	if (pos != 0)
+		close(pipes[pos - 1][0]);
+	if (pos != cmd_count - 1)
+		close(pipes[pos][1]);
+}
+
 int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 {
 	int		i;
@@ -71,11 +78,8 @@ int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 		{
 			while (finished != proc_ids[pos])
 				pos++;
-			if (pos != 0)
-				close(pipes[pos - 1][0]);
-			if (pos != cmd_count - 1)
-				close(pipes[pos][1]);
-			else
+			close_pipes(pipes, pos, cmd_count);
+			if (pos == cmd_count - 1)
 				status[1] = status[0] / 256;
 			if (status[0] / 256 == 127 || status[0] / 256 == 126)
 				err_access(cmd_lst, pos, status[0] / 256);
@@ -85,12 +89,4 @@ int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 	if (sig_global == 0)
 		status[1] = 130;
 	return (status[1]);
-}
-
-void	restore_std_in_out(int fd0, int fd1)
-{
-	dup2(fd0, 0);
-	dup2(fd1, 1);
-	close(fd0);
-	close(fd1);
 }

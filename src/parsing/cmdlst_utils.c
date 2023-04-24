@@ -54,6 +54,7 @@ void	free_cmd_lst_solo(t_cmd_lst **cmd_lst, int cmds_count, int files_count)
 	free((*cmd_lst)->files);
 	free((*cmd_lst)->file_type);
 	free(*cmd_lst);
+	*cmd_lst = NULL;
 }
 
 char	*malloc_no_quotes(char *str)

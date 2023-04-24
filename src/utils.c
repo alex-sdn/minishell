@@ -43,48 +43,6 @@ char	*triple_strjoin(char *str1, char *str2, char *str3)
 		return (new1);
 }
 
-char	*ft_cdcat(char *curr, char *new)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (curr[i])
-		i++;
-	curr[i++] = '/';
-	while (new[j])
-		curr[i++] = new[j++];
-	curr[i] = '\0';
-	return (curr);
-}
-
-void	ft_del(void *content)
-{
-	if (content)
-		free(content);
-}
-
-void	free_tab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	if (!tab)
-		return ;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab[i]);
-	free(tab);
-}
-
-void	free_tab_mid(char **tab, int i)
-{
-	while (tab[i])
-		free(tab[i++]);
-	free_tab(tab);
-}
-
 void	printf_error(char *str, char *arg)
 {
 	int	i;

@@ -1,26 +1,5 @@
 #include "minishell.h"
 
-//a modif encore
-int	fill_heredoc(int fd, char *limiter)
-{
-	char	*line;
-
-	write(1, "> ", 2);
-	line = get_next_line(0);
-	while (!(ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-		&& ft_strlen(line) == ft_strlen(limiter) + 1 
-		&& line[ft_strlen(limiter)] == '\n'))  //moche mais marche
-	{
-		ft_putstr_fd(line, fd);
-		free(line);
-		write(1, "> ", 2);
-		line = get_next_line(0);
-	}
-	free(line);
-	close(fd);
-	return (0);
-}
-
 int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int files_count, int idx)
 {
 	int		fd;
@@ -35,7 +14,8 @@ int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int files_count, int idx)
 		if (fd < 0)
 			return (free(doc), 1);
 		(*cmd_lst)->file_type[files_count] = 1;
-		fill_heredoc(fd, lst1->next->content);  // if == 1 (car CTRL+C) return (free(doc), 1);
+		if (fill_heredoc(fd, lst1->next->content) == 1)
+			return (free(doc), 1);
 		(*cmd_lst)->files[files_count] = ft_strdup(doc);
 		free(doc);
 	}

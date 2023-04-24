@@ -8,9 +8,9 @@ void	prompt_loop(t_list **env, t_cmd_lst *cmd_lst, int status)
 
 	while (1)
 	{
-		sig_global = 0;
+		sig_global--;
 		input = readline("\033[1;32mminishell$\x1B[0m ");
-		if (sig_global == -1)
+		if (sig_global < 0)
 			status = 130;
 		if (!input)
 			ft_exit(env, NULL, 0, 0);
@@ -41,7 +41,7 @@ int	main(int ac, char **av, char **envp)
 	env = init_env(NULL, envp);
 	if (!env)
 		return (1);
-	init_signal();
+	init_signal(S_DEFAULT);
 	prompt_loop(&env, NULL, 0);
 	return (0);
 }

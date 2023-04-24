@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-//checks if '$' in the str (unless in single quotes)
 static int	has_env_var(char *str)
 {
 	int		i;
@@ -17,7 +16,6 @@ static int	has_env_var(char *str)
 	return (0);
 }
 
-// remplace $text par le contenu de 'text' dans env
 static char	*sub_env_var(char *str, int start, t_list *env)
 {
 	int		end;
@@ -46,7 +44,6 @@ static char	*sub_env_var(char *str, int start, t_list *env)
 	return (new);
 }
 
-// remplace $? par status
 static char	*sub_status_var(char *str, int start, int status)
 {
 	int		end;
@@ -71,7 +68,6 @@ static char	*sub_status_var(char *str, int start, int status)
 	return (new);
 }
 
-//loop for sub_env_var
 char	*replace_env_vars(char *str, t_list *env, int status)
 {
 	char	*new;

@@ -16,15 +16,34 @@ void	loop_process(int fd_in, int fd_out, t_cmd_lst **cmd_lst, t_list **env)
 	pathcmd = check_access((*cmd_lst)->cmds[0], env, -1);
 	if (pathcmd == NULL)
 		ft_exit(env, cmd_lst, convert_status(errno), 1);
+	if (is_solo_cat(*cmd_lst) == 1)
+		init_signal(S_CAT);
 	execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
 	exit(0);
+}
+
+static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *pathcmd)
+{
+	pid_t	proc_id;
+	int		status;
+
+	if (is_solo_cat(*cmd_lst) == 1)
+		init_signal(S_CAT);
+	proc_id = fork();
+	if (proc_id < 0)
+		return (perror("fork"), free(pathcmd), errno);
+	if (proc_id == 0)
+		execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
+	while (waitpid(proc_id, &status, WNOHANG) == 0);
+	init_signal(S_DEFAULT);
+	if (sig_global == 0)
+		return (free(pathcmd), 130);
+	return (free(pathcmd), convert_status(status));
 }
 
 int	solo_process(t_cmd_lst **cmd_lst, t_list **env)
 {
 	char	*pathcmd;
-	pid_t	proc_id;
-	int		status;
 	int		fd_in_out[2];
 
 	fd_in_out[0] = 0;
@@ -38,15 +57,7 @@ int	solo_process(t_cmd_lst **cmd_lst, t_list **env)
 	pathcmd = check_access((*cmd_lst)->cmds[0], env, -1);
 	if (pathcmd == NULL)
 		return (convert_status(errno));
-	proc_id = fork();
-	if (proc_id < 0)
-		return (perror("fork"), errno);
-	if (proc_id == 0)
-		execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
-	while (waitpid(proc_id, &status, WNOHANG) == 0);
-	if (sig_global == 0)
-		return (free(pathcmd), 130);
-	return (free(pathcmd), convert_status(status));
+	return (solo_proc_2(cmd_lst, env, pathcmd));
 }
 
 int	exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo)

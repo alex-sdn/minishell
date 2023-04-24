@@ -65,6 +65,8 @@ int	convert_status(int status)
 {
 	if (status == 2)
 		return (127);
+	else if (status == 3)
+		return (131);
 	else if (status == 13)
 		return (126);
 	else if (status == 512)
@@ -72,23 +74,4 @@ int	convert_status(int status)
 	else if (status == 256)
 		return (1);
 	return (status);
-}
-
-int	is_builtin(char *cmd)
-{
-	if (ft_strncmp(cmd, "cd", 2) == 0 && ft_strlen(cmd) == 2)
-		return (FT_CD);
-	if (ft_strncmp(cmd, "echo", 4) == 0 && ft_strlen(cmd) == 4)
-		return (FT_ECHO);
-	if (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
-		return (FT_ENV);
-	if (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4)
-		return (FT_EXIT);
-	if (ft_strncmp(cmd, "export", 6) == 0 && ft_strlen(cmd) == 6)
-		return (FT_EXPORT);
-	if (ft_strncmp(cmd, "pwd", 3) == 0 && ft_strlen(cmd) == 3)
-		return (FT_PWD);
-	if (ft_strncmp(cmd, "unset", 5) == 0 && ft_strlen(cmd) == 5)
-		return (FT_UNSET);
-	return (0);
 }
