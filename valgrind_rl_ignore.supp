@@ -1,0 +1,8 @@
+{
+   ignore_libreadline_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libreadline.so.*
+}
+
+valgrind --trace-children=yes --leak-check=full --show-leak-kinds=all --suppressions=valgrind_rl_ignore.supp
