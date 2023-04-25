@@ -48,21 +48,15 @@ void	free_cmd_lst_solo(t_cmd_lst **cmd_lst, int cmds_count, int files_count)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (cmds_count > 0)
-		while (i < cmds_count - 1)
-			free((*cmd_lst)->cmds[i++]);
-	else
-		while ((*cmd_lst)->cmds[i])
-			free((*cmd_lst)->cmds[i++]);
+		while (++i < cmds_count)
+			free((*cmd_lst)->cmds[i]);
 	free((*cmd_lst)->cmds);
-	i = 0;
+	i = -1;
 	if (files_count > 0)
-		while (i < files_count - 1)
-			free((*cmd_lst)->files[i++]);
-	else
-		while ((*cmd_lst)->files[i])
-			free((*cmd_lst)->files[i++]);
+		while (++i < files_count - 1)
+			free((*cmd_lst)->files[i]);
 	free((*cmd_lst)->files);
 	free((*cmd_lst)->file_type);
 	free(*cmd_lst);

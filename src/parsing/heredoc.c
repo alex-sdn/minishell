@@ -21,6 +21,17 @@ static void	swap_termios(void)
 	tcsetattr(0, TCSAFLUSH, &termi_tmp);
 }
 
+static char	*loop_return(char *str1, char *str2)
+{
+	char	*new;
+
+	new = ft_strjoin(str1, str2);
+	free(str2);
+	if (!new)
+		return (NULL);
+	return (new);
+}
+
 static char	*gnl_heredoc(char *limiter, int loop)
 {
 	char			*line;
@@ -39,10 +50,10 @@ static char	*gnl_heredoc(char *limiter, int loop)
 	else if (!line && !loop)
 		return (printf_error(ERR_HDOC, limiter), ft_strjoin(limiter, "\n"));
 	else if (!line)
-		return (ft_strjoin("", gnl_heredoc(limiter, 1)));
+		return (loop_return("", gnl_heredoc(limiter, 1)));
 	if (line[ft_strlen(line) - 1] != '\n')
 	{
-		new = ft_strjoin(line, gnl_heredoc(limiter, 1));
+		new = loop_return(line, gnl_heredoc(limiter, 1));
 		free(line);
 		return (new);
 	}

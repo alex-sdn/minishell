@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+static char	*get_doc_name(int idx)
+{
+	char	*doc;
+	char	*str_idx;
+
+	str_idx = ft_itoa(idx);
+	if (!str_idx)
+		return (NULL);
+	doc = ft_strjoin(".infile_tmp", str_idx);
+	free(str_idx);
+	return (doc);
+}
+
 int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int f_cnt, int idx)
 {
 	int		fd;
@@ -19,7 +32,7 @@ int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int f_cnt, int idx)
 
 	if (is_redirec(lst1->content) == 4)
 	{
-		doc = ft_strjoin(".infile_tmp", ft_itoa(idx));
+		doc = get_doc_name(idx);
 		if (!doc)
 			return (1);
 		fd = open(doc, O_CREAT | O_RDWR | O_TRUNC, 0644);
@@ -41,7 +54,7 @@ int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int f_cnt, int idx)
 	return (0);
 }
 
-int	fill_cmd_lst(t_list *lst1, t_cmd_lst **cmd_lst, int idx)
+int	fill_cmd_lst(t_list *lst1, t_cmd_lst **cmds, int idx)
 {
 	int	cmds_count;
 	int	files_cnt;
@@ -52,15 +65,15 @@ int	fill_cmd_lst(t_list *lst1, t_cmd_lst **cmd_lst, int idx)
 	{
 		if (is_redirec(lst1->content) > 0)
 		{
-			if (fill_redirec(lst1, cmd_lst, files_cnt++, idx) == 1)
-				return (free_cmd_lst_solo(cmd_lst, cmds_count, files_cnt), 1);
+			if (fill_redirec(lst1, cmds, files_cnt++, idx) == 1)
+				return (free_cmd_lst_solo(cmds, cmds_count, files_cnt - 1), 1);
 			lst1 = lst1->next;
 		}
 		else
 		{
-			(*cmd_lst)->cmds[cmds_count] = strdup_quotes((char *)lst1->content);
-			if (!(*cmd_lst)->cmds[cmds_count++])
-				return (free_cmd_lst_solo(cmd_lst, cmds_count, files_cnt), 1);
+			(*cmds)->cmds[cmds_count] = strdup_quotes((char *)lst1->content);
+			if (!(*cmds)->cmds[cmds_count++])
+				return (free_cmd_lst_solo(cmds, cmds_count - 1, files_cnt), 1);
 		}
 		lst1 = lst1->next;
 	}
