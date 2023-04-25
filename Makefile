@@ -6,14 +6,14 @@
 #    By: asadanow <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/08 15:39:12 by asadanow          #+#    #+#              #
-#    Updated: 2023/03/08 15:39:15 by asadanow         ###   ########.fr        #
+#    Updated: 2023/04/25 18:16:29 by asadanow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRC = ./src/main.c \
-		./src/env.c \
+		./src/env_utils.c \
 		./src/signal.c \
 		./src/utils.c \
 		./src/free_utils.c \
@@ -43,7 +43,7 @@ SRC = ./src/main.c \
 
 LIBDIR = ./libft/
 
-CC = cc -Wall -Wextra -Werror
+CC = gcc -Wall -Wextra -Werror
 
 OBJ = $(SRC:.c=.o)
 

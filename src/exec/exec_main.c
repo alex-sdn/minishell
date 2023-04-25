@@ -1,28 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_main.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:16:41 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:16:42 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	open_files(int *in_fd, int *out_fd, t_cmd_lst *cmd_lst)
+int	open_files(int *in_fd, int *out, t_cmd_lst *cmds)
 {
 	int	i;
 
 	i = 0;
-	while (i < cmd_lst->file_amt)
+	while (i < cmds->file_amt)
 	{
-		if (cmd_lst->file_type[i] == 1)
+		if (cmds->file_type[i] == 1)
 		{
 			close(*in_fd);
-			*in_fd = open(cmd_lst->files[i], O_RDONLY);
+			*in_fd = open(cmds->files[i], O_RDONLY);
 			if (*in_fd < 0)
-				return (perror(cmd_lst->files[i]), 1);
+				return (perror(cmds->files[i]), 1);
 		}
 		else
 		{
-			close(*out_fd);
-			if (cmd_lst->file_type[i] == 2)
-				*out_fd = open(cmd_lst->files[i], O_CREAT | O_RDWR | O_TRUNC, 0644);
-			else if (cmd_lst->file_type[i] == 3)
-				*out_fd = open(cmd_lst->files[i], O_CREAT | O_RDWR | O_APPEND, 0644);
-			if (*out_fd < 0)
-				return (perror(cmd_lst->files[i]), 1);
+			close(*out);
+			if (cmds->file_type[i] == 2)
+				*out = open(cmds->files[i], O_CREAT | O_RDWR | O_TRUNC, 0644);
+			else if (cmds->file_type[i] == 3)
+				*out = open(cmds->files[i], O_CREAT | O_RDWR | O_APPEND, 0644);
+			if (*out < 0)
+				return (perror(cmds->files[i]), 1);
 		}
 		i++;
 	}
@@ -69,7 +81,7 @@ char	*check_access(char *cmd, t_list **env, int i)
 	return (free_tab(paths), pathcmd);
 }
 
-int exec_pipes(int **pipes, t_cmd_lst **cmd_lst, t_list **env)
+int	exec_pipes(int **pipes, t_cmd_lst **cmd_lst, t_list **env)
 {
 	int		i;
 	int		cmd_count;
@@ -79,7 +91,7 @@ int exec_pipes(int **pipes, t_cmd_lst **cmd_lst, t_list **env)
 	cmd_count = cmdlst_size(*cmd_lst);
 	proc_ids = malloc(sizeof(pid_t) * cmd_count);
 	if (!proc_ids)
-		return (1);  //malloc fail
+		return (1);
 	while (i < cmd_count)
 	{
 		proc_ids[i] = fork();

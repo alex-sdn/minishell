@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:20:03 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:20:04 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	check_pipes(char *input, int i)
@@ -5,7 +17,7 @@ int	check_pipes(char *input, int i)
 	while (input[i] == ' ')
 		i++;
 	if (input[i] == '|')
-		return (printf_error(ERR_SNTX, "|"), 1); 
+		return (printf_error(ERR_SNTX, "|"), 1);
 	while (input[i])
 	{
 		while (input[i] && input[i] != '|')

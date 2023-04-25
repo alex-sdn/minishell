@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:13:59 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:14:01 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*ft_cdcat(char *curr, char *new)
@@ -51,7 +63,7 @@ static int	cd_relative(t_list **env, t_cmd_lst *cmd_lst)
 {
 	char	*new_path;
 	char	*old_path;
-	int		curr_len;
+	int		len;
 
 	if (cmd_lst->cmds[1][0] == '.' && ft_strlen(cmd_lst->cmds[1]) == 1)
 	{
@@ -65,42 +77,42 @@ static int	cd_relative(t_list **env, t_cmd_lst *cmd_lst)
 		&& ft_strlen(cmd_lst->cmds[1]) == 2)
 		return (cd_dotdot(env, cmd_lst));
 	old_path = getcwd(NULL, 0);
-	curr_len = ft_strlen(old_path);
-	new_path = malloc(sizeof(char) * curr_len + ft_strlen(cmd_lst->cmds[1]) + 2);
+	len = ft_strlen(old_path);
+	new_path = malloc(sizeof(char) * (len + ft_strlen(cmd_lst->cmds[1]) + 2));
 	if (!new_path)
 		return (free(old_path), 1);
-	new_path = getcwd(new_path, curr_len + 2);
+	new_path = getcwd(new_path, len + 2);
 	new_path = ft_cdcat(new_path, cmd_lst->cmds[1]);
 	if (chdir(new_path) == 0)
 		return (cd_success(env, old_path, new_path, 2));
 	return (free(new_path), free(old_path), perror(cmd_lst->cmds[1]), 1);
 }
 
-int	ft_cd(t_list **env, t_cmd_lst *cmd_lst)
+int	ft_cd(t_list **env, t_cmd_lst *cmds)
 {
 	char	*new_path;
-	char	*old_path;
+	char	*old_p;
 
-	if (!cmd_lst->cmds[1])
+	if (!cmds->cmds[1] || (cmds->cmds[1][0] == '~' && !cmds->cmds[1][1]))
 	{
-		old_path = getcwd(NULL, 0);
+		old_p = getcwd(NULL, 0);
 		new_path = ft_getenv(*env, "HOME");
 		if (!new_path)
 			return (1);
 		if (ft_strlen(new_path) == 0)
-			return (free(old_path), free(new_path), printf_error(ERR_HOME, 0), 1);
+			return (free(old_p), free(new_path), printf_error(ERR_HOME, 0), 1);
 		if (chdir(new_path) == 0)
-			return (cd_success(env, old_path, new_path, 2));
-		return (free(old_path), perror(new_path), free(new_path), 1);
+			return (cd_success(env, old_p, new_path, 2));
+		return (free(old_p), perror(new_path), free(new_path), 1);
 	}
-	if (cmd_lst->cmds[2])
+	if (cmds->cmds[2])
 		return (write(2, "cd: too many arguments\n", 23), 1);
-	if (cmd_lst->cmds[1] && cmd_lst->cmds[1][0] == '/')
+	if (cmds->cmds[1] && cmds->cmds[1][0] == '/')
 	{
-		old_path = getcwd(NULL, 0);
-		if (chdir(cmd_lst->cmds[1]) == 0)
-			return (cd_success(env, old_path, cmd_lst->cmds[1], 1));
-		return (free(old_path), perror(cmd_lst->cmds[1]), 1);
+		old_p = getcwd(NULL, 0);
+		if (chdir(cmds->cmds[1]) == 0)
+			return (cd_success(env, old_p, cmds->cmds[1], 1));
+		return (free(old_p), perror(cmds->cmds[1]), 1);
 	}
-	return (cd_relative(env, cmd_lst));
+	return (cd_relative(env, cmds));
 }

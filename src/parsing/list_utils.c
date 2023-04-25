@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:19:54 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:19:54 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	lst_split_quotes_2(t_list **head, char *str, int i, int j)
@@ -17,7 +29,7 @@ static int	lst_split_quotes_2(t_list **head, char *str, int i, int j)
 
 t_list	*lst_split_quotes(char *str, char c)
 {
-	t_list  *head;
+	t_list	*head;
 	int		i;
 	int		j;
 
@@ -69,7 +81,7 @@ int	get_redirec_pos(char *str)
 
 static int	lst_split_redirec_2(t_list **tmp, char *old, int i)
 {
-	t_list *nxt;
+	t_list	*nxt;
 	char	*content;
 
 	nxt = (*tmp)->next;
@@ -106,7 +118,7 @@ int	lst_split_redirec(t_list **head, int i)
 					return (free(old), 1);
 			free(old);
 			tmp = tmp->next;
-			i = 0;	
+			i = 0;
 		}
 	}
 	return (0);

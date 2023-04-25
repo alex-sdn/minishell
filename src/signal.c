@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:22:05 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:22:25 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	handle_sig_dfl(int sig)
@@ -36,7 +48,7 @@ void	handle_sig_heredoc(int sig)
 void	handle_sig_cat(int sig)
 {
 	(void)sig;
-	write(2, "Quit\n", 5); //verif message
+	write(2, "Quit (core dumped)\n", 19);
 }
 
 static void	init_signal_slash(int type)
@@ -46,13 +58,15 @@ static void	init_signal_slash(int type)
 	if (type == S_CAT)
 	{
 		sa_slash.sa_handler = &handle_sig_cat;
+		sigemptyset(&sa_slash.sa_mask);
+		sa_slash.sa_flags = 0;
 		sigaction(SIGQUIT, &sa_slash, NULL);
 	}
 	else
 	{
 		sa_slash.sa_handler = SIG_IGN;
 		sigemptyset(&sa_slash.sa_mask);
-    	sa_slash.sa_flags = SA_RESTART;
+		sa_slash.sa_flags = SA_RESTART;
 		sigaction(SIGQUIT, &sa_slash, NULL);
 	}
 }

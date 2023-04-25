@@ -10,12 +10,12 @@
 
 NOTES:
 
-- pb CTRL+C dans here_doc + ctrl+\ dans cat et heredoc
-	(fix normalement, verif a 42)
-
+- heredoc et $var dans le mauvaise ordre..
 
 - verif si tous les exit status sont geree
 - error mgmt quand pipe/dup/fork fail moyen, osef ? pareil pour malloc fail
+- pb CTRL+C dans here_doc + ctrl+\ dans cat et heredoc
+	(fix normalement, verif a 42)
 
 
 export NOT VALID if

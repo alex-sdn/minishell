@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_cmdlst.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:19:46 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:19:47 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int files_count, int idx)
+int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int f_cnt, int idx)
 {
 	int		fd;
 	char	*doc;
@@ -13,42 +25,42 @@ int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int files_count, int idx)
 		fd = open(doc, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (fd < 0)
 			return (free(doc), 1);
-		(*cmd_lst)->file_type[files_count] = 1;
+		(*cmd_lst)->file_type[f_cnt] = 1;
 		if (fill_heredoc(fd, lst1->next->content) == 1)
 			return (free(doc), 1);
-		(*cmd_lst)->files[files_count] = ft_strdup(doc);
+		(*cmd_lst)->files[f_cnt] = ft_strdup(doc);
 		free(doc);
 	}
 	else if (is_redirec(lst1->content) > 0)
 	{
-		(*cmd_lst)->file_type[files_count] = is_redirec(lst1->content);
-		(*cmd_lst)->files[files_count] = strdup_quotes((char *)lst1->next->content);
+		(*cmd_lst)->file_type[f_cnt] = is_redirec(lst1->content);
+		(*cmd_lst)->files[f_cnt] = strdup_quotes((char *)lst1->next->content);
 	}
-	if (!(*cmd_lst)->files[files_count])
+	if (!(*cmd_lst)->files[f_cnt])
 		return (1);
 	return (0);
 }
 
-int fill_cmd_lst(t_list *lst1, t_cmd_lst **cmd_lst, int idx)
+int	fill_cmd_lst(t_list *lst1, t_cmd_lst **cmd_lst, int idx)
 {
 	int	cmds_count;
-	int	files_count;
+	int	files_cnt;
 
 	cmds_count = 0;
-	files_count = 0;
+	files_cnt = 0;
 	while (lst1)
 	{
 		if (is_redirec(lst1->content) > 0)
 		{
-			if (fill_redirec(lst1, cmd_lst, files_count++, idx) == 1)
-				return (free_cmd_lst_solo(cmd_lst, cmds_count, files_count), 1);
+			if (fill_redirec(lst1, cmd_lst, files_cnt++, idx) == 1)
+				return (free_cmd_lst_solo(cmd_lst, cmds_count, files_cnt), 1);
 			lst1 = lst1->next;
 		}
 		else
 		{
 			(*cmd_lst)->cmds[cmds_count] = strdup_quotes((char *)lst1->content);
 			if (!(*cmd_lst)->cmds[cmds_count++])
-				return (free_cmd_lst_solo(cmd_lst, cmds_count, files_count), 1);
+				return (free_cmd_lst_solo(cmd_lst, cmds_count, files_cnt), 1);
 		}
 		lst1 = lst1->next;
 	}

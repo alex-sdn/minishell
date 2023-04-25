@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_variables.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:19:31 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:19:32 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	has_env_var(char *str)
@@ -71,7 +83,7 @@ static char	*sub_status_var(char *str, int start, int status)
 char	*replace_env_vars(char *str, t_list *env, int status)
 {
 	char	*new;
-	
+
 	while (has_env_var(str) > 0)
 	{
 		if (str[has_env_var(str) + 1] == '?')

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:16:04 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:16:05 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_list	*init_env(t_list *env, char **envp)
@@ -95,7 +107,7 @@ int	add_env(t_list **env, char *new_var)
 	if (!new || !new->content)
 		return (free(dup_content), 1);
 	ft_lstadd_back(env, new);
-	return (0);		
+	return (0);
 }
 
 char	*ft_getenv(t_list *env, char *var)

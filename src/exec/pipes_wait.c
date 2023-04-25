@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipes_wait.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:16:45 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:16:46 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	**init_pipes(int size)
 {
-	int **pipes;
+	int	**pipes;
 	int	i;
 
 	i = 0;
@@ -31,8 +43,8 @@ void	free_pipes(int **pipes, int size)
 
 void	start_process(int i, int **pipes, t_cmd_lst **cmd_lst, t_list **env)
 {
-	int j;
-	int fd[2];
+	int	j;
+	int	fd[2];
 
 	j = -1;
 	if (i == 0)

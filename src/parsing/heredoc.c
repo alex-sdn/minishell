@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:19:35 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:19:36 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	swap_termios(void)
@@ -24,8 +36,8 @@ static char	*gnl_heredoc(char *limiter, int loop)
 	tcsetattr(0, TCSANOW, &termi_og);
 	if (!line && !g_sig)
 		return (NULL);
-	else if (!line && !loop) //msg additionel ? (dans stderr)
-		return (write(1, "\n", 1), ft_strjoin(limiter, "\n"));
+	else if (!line && !loop)
+		return (printf_error(ERR_HDOC, limiter), ft_strjoin(limiter, "\n"));
 	else if (!line)
 		return (ft_strjoin("", gnl_heredoc(limiter, 1)));
 	if (line[ft_strlen(line) - 1] != '\n')
@@ -37,15 +49,15 @@ static char	*gnl_heredoc(char *limiter, int loop)
 	return (line);
 }
 
-//devrait etre ok. mettre dans fichier sep
 int	fill_heredoc(int fd, char *limiter)
 {
 	char	*line;
 
+	limiter = strdup_quotes(limiter);
 	write(1, "> ", 2);
 	line = gnl_heredoc(limiter, 0);
 	while (line && !(ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-		&& ft_strlen(line) == ft_strlen(limiter) + 1))
+			&& ft_strlen(line) == ft_strlen(limiter) + 1))
 	{
 		ft_putstr_fd(line, fd);
 		free(line);
@@ -53,6 +65,7 @@ int	fill_heredoc(int fd, char *limiter)
 		line = gnl_heredoc(limiter, 0);
 	}
 	close(fd);
+	free(limiter);
 	if (!line)
 		return (1);
 	free(line);

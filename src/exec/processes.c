@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   processes.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asadanow <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/25 18:16:49 by asadanow          #+#    #+#             */
+/*   Updated: 2023/04/25 18:16:49 by asadanow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	loop_process(int fd_in, int fd_out, t_cmd_lst **cmd_lst, t_list **env)
@@ -34,7 +46,8 @@ static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *pathcmd)
 		return (perror("fork"), free(pathcmd), errno);
 	if (proc_id == 0)
 		execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
-	while (waitpid(proc_id, &status, WNOHANG) == 0);
+	while (waitpid(proc_id, &status, WNOHANG) == 0)
+		;
 	init_signal(S_DEFAULT);
 	if (g_sig == 0)
 		return (free(pathcmd), 130);
