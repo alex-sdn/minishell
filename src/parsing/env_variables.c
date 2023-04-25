@@ -25,7 +25,7 @@ static int	has_env_var(char *str)
 			i = ft_skip_quotes(str, str[i], i + 1);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
 static char	*sub_env_var(char *str, int start, t_list *env)
@@ -84,7 +84,7 @@ char	*replace_env_vars(char *str, t_list *env, int status)
 {
 	char	*new;
 
-	while (has_env_var(str) > 0)
+	while (has_env_var(str) >= 0)
 	{
 		if (str[has_env_var(str) + 1] == '?')
 			new = sub_status_var(str, has_env_var(str), status);
