@@ -12,11 +12,19 @@
 
 #include "minishell.h"
 
-static int	has_env_var(char *str)
+static int	get_next_diff(char *str, int pos)
 {
-	int		i;
+	int	next_diff;
 
-	i = 0;
+	next_diff = ft_strlen(str);
+	while (str[pos] && is_special(str[pos]) == 0)
+		pos++;
+	next_diff -= pos;
+	return (next_diff);	
+}
+
+static int	has_env_var(char *str, int i)
+{
 	while (str[i])
 	{
 		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != ' ')
@@ -83,17 +91,22 @@ static char	*sub_status_var(char *str, int start, int status)
 char	*replace_env_vars(char *str, t_list *env, int status)
 {
 	char	*new;
+	int		diff;
+	int		next_diff;
 
-	while (has_env_var(str) >= 0)
+	diff = 0;
+	while (has_env_var(str, diff) >= 0)
 	{
-		if (str[has_env_var(str) + 1] == '?')
-			new = sub_status_var(str, has_env_var(str), status);
+		next_diff = get_next_diff(str, has_env_var(str, diff) + 1);
+		if (str[has_env_var(str, diff) + 1] == '?')
+			new = sub_status_var(str, has_env_var(str, diff), status);
 		else
-			new = sub_env_var(str, has_env_var(str), env);
+			new = sub_env_var(str, has_env_var(str, diff), env);
 		if (!new)
 			return (free(str), NULL);
 		free(str);
 		str = new;
+		diff = ft_strlen(new) - next_diff;
 	}
 	return (str);
 }
