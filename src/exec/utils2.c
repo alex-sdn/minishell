@@ -14,10 +14,18 @@
 
 void	restore_std_in_out(int fd0, int fd1)
 {
+	close(0);
+	close(1);
 	dup2(fd0, 0);
 	dup2(fd1, 1);
 	close(fd0);
 	close(fd1);
+}
+
+void	double_close(int fd1, int fd2)
+{
+	close(fd1);
+	close(fd2);
 }
 
 int	is_builtin(char *cmd)
@@ -38,6 +46,14 @@ int	is_builtin(char *cmd)
 		return (FT_UNSET);
 	return (0);
 }
+
+// int	is_dotdot(char *cmd)
+// {
+// 	if ((ft_strlen(cmd) == 1 && strncmp(cmd, ".", 1) == 0)
+// 		|| (ft_strlen(cmd) == 2 && strncmp(cmd, "..", 2) == 0))
+// 		return (1);
+// 	return (0);
+// }
 
 int	is_solo_cat(t_cmd_lst *cmd_lst)
 {

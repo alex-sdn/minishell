@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+static void	reset_fds(int *std_in_out)
+{
+	close(0);
+	close(1);
+	dup2(std_in_out[0], 0);
+	dup2(std_in_out[1], 1);
+	close(std_in_out[0]);
+	close(std_in_out[1]);
+	printf("exit\n");
+}
+
 static int	check_maxmin(long long status, char *nbr)
 {
 	int	len;
@@ -78,15 +89,15 @@ static int	get_exit_status(char **cmds)
 	return ((int)status);
 }
 
-int	ft_exit(t_list **env, t_cmd_lst **cmd_lst, int status, int fake)
+int	ft_exit(t_list **env, t_cmd_lst **cmd_lst, int status, int *std_in_out)
 {
-	if (!fake)
-		printf("exit\n");
 	if (cmd_lst && ft_strncmp("exit", (*cmd_lst)->cmds[0], 4) == 0
-		&& (*cmd_lst)->cmds[1] && !fake)
+		&& ft_strlen((*cmd_lst)->cmds[0]) == 4 && (*cmd_lst)->cmds[1])
 		status = get_exit_status((*cmd_lst)->cmds);
 	if (status >= 0)
 	{
+		if (std_in_out)
+			reset_fds(std_in_out);
 		ft_lstclear(env, &ft_del);
 		rl_clear_history();
 		if (cmd_lst)

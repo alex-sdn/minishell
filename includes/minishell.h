@@ -77,7 +77,8 @@ void		init_signal(int type);
 int			ft_cd(t_list **env, t_cmd_lst *cmd_lst);
 int			ft_echo(t_cmd_lst *cmd_lst);
 int			ft_env(t_list *env, t_cmd_lst *cmd_lst);
-int			ft_exit(t_list **env, t_cmd_lst **cmd_lst, int status, int fake);
+int			ft_exit(t_list **env, t_cmd_lst **cmd_lst, int status,
+				int *std_in_out);
 int			ft_export(t_list **env, t_cmd_lst *cmd_lst);
 int			ft_pwd(void);
 int			ft_unset(t_list **env, t_cmd_lst *cmd_lst);
@@ -136,10 +137,10 @@ char		*check_access(char *cmd, t_list **env, int i);
 int			exec_pipes(int **pipes, t_cmd_lst **cmd_lst, t_list **env);
 int			exec_main(t_cmd_lst **cmd_lst, t_list **env, int cmd_count);
 
-void		loop_process(int fd_in, int fd_out, t_cmd_lst **cmd_lst,
-				t_list **env);
-int			solo_process(t_cmd_lst **cmd_lst, t_list **env);
-int			exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo);
+void		loop_process(int *fds, t_cmd_lst **cmd_lst, t_list **env);
+int			solo_process(t_cmd_lst **cmd_lst, t_list **env, int *std_in_out);
+int			exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo,
+				int *fds);
 
 int			**init_pipes(int size);
 void		free_pipes(int **pipes, int size);
@@ -154,6 +155,7 @@ char		*get_last_str(char **tab);
 int			convert_status(int status);
 
 void		restore_std_in_out(int fd0, int fd1);
+void		double_close(int fd1, int fd2);
 int			is_builtin(char *cmd);
 int			is_solo_cat(t_cmd_lst *cmd_lst);
 

@@ -58,7 +58,7 @@ char	*check_access(char *cmd, t_list **env, int i)
 	char	**paths;
 	char	*pathcmd;
 
-	if (!cmd || !cmd[0])
+	if (!cmd || !cmd[0])  // VERIF . ET .. (is_dotdot == 1)
 	{
 		errno = 127;
 		if (!cmd)
@@ -121,7 +121,7 @@ int	exec_main(t_cmd_lst **cmd_lst, t_list **env, int cmd_count)
 		std_in_out[0] = dup(0);
 		std_in_out[1] = dup(1);
 		replace_env(env, "_", get_last_str((*cmd_lst)->cmds));
-		status = solo_process(cmd_lst, env);
+		status = solo_process(cmd_lst, env, std_in_out);
 		if (status == 127 || status == 126)
 			err_access(*cmd_lst, 0, status);
 		restore_std_in_out(std_in_out[0], std_in_out[1]);

@@ -12,29 +12,32 @@
 
 #include "minishell.h"
 
-void	loop_process(int fd_in, int fd_out, t_cmd_lst **cmd_lst, t_list **env)
+void	loop_process(int *fds, t_cmd_lst **cmd_lst, t_list **env)
 {
 	char	*pathcmd;
 
-	if (open_files(&fd_in, &fd_out, *cmd_lst) == 1)
-		exit(1);
-	if (dup2(fd_in, 0) < 0 || dup2(fd_out, 1) < 0)
+	if (open_files(&fds[0], &fds[1], *cmd_lst) == 1)
+	{
+		double_close(fds[0], fds[1]);
+		ft_exit(env, cmd_lst, 0, NULL);
+	}
+	if (dup2(fds[0], 0) < 0 || dup2(fds[1], 1) < 0)
 	{
 		perror("dup2");
 		exit(errno);
 	}
 	if (is_builtin((*cmd_lst)->cmds[0]) > 0)
-		exit(exec_builtin(cmd_lst, env, 0));
+		exit(exec_builtin(cmd_lst, env, 0, fds));
 	pathcmd = check_access((*cmd_lst)->cmds[0], env, -1);
 	if (pathcmd == NULL)
-		ft_exit(env, cmd_lst, convert_status(errno), 1);
+		ft_exit(env, cmd_lst, convert_status(errno), NULL);
 	if (is_solo_cat(*cmd_lst) == 1)
 		init_signal(S_CAT);
 	execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
 	exit(0);
 }
 
-static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *pathcmd)
+static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *path, int *fd)
 {
 	pid_t	proc_id;
 	int		status;
@@ -43,18 +46,22 @@ static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *pathcmd)
 		init_signal(S_CAT);
 	proc_id = fork();
 	if (proc_id < 0)
-		return (perror("fork"), free(pathcmd), errno);
+		return (perror("fork"), free(path), errno);
 	if (proc_id == 0)
-		execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
+	{
+		close(fd[0]);
+		close(fd[1]);
+		execve(path, (*cmd_lst)->cmds, create_env_tab(*env));
+	}
 	while (waitpid(proc_id, &status, WNOHANG) == 0)
 		;
 	init_signal(S_DEFAULT);
 	if (g_sig == 0)
-		return (free(pathcmd), 130);
-	return (free(pathcmd), convert_status(status));
+		return (free(path), 130);
+	return (free(path), convert_status(status));
 }
 
-int	solo_process(t_cmd_lst **cmd_lst, t_list **env)
+int	solo_process(t_cmd_lst **cmd_lst, t_list **env, int *std_in_out)
 {
 	char	*pathcmd;
 	int		fd_in_out[2];
@@ -66,14 +73,14 @@ int	solo_process(t_cmd_lst **cmd_lst, t_list **env)
 	if (dup2(fd_in_out[0], 0) < 0 || dup2(fd_in_out[1], 1) < 0)
 		return (perror("dup2"), errno);
 	if (is_builtin((*cmd_lst)->cmds[0]) > 0)
-		return (exec_builtin(cmd_lst, env, 1));
+		return (exec_builtin(cmd_lst, env, 1, std_in_out));
 	pathcmd = check_access((*cmd_lst)->cmds[0], env, -1);
 	if (pathcmd == NULL)
 		return (convert_status(errno));
-	return (solo_proc_2(cmd_lst, env, pathcmd));
+	return (solo_proc_2(cmd_lst, env, pathcmd, std_in_out));
 }
 
-int	exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo)
+int	exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo, int *fds)
 {
 	int	builtin_id;
 	int	status;
@@ -87,14 +94,17 @@ int	exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo)
 	else if (builtin_id == FT_ENV)
 		status = ft_env(*env, *cmd_lst);
 	else if (builtin_id == FT_EXIT)
-		status = ft_exit(env, cmd_lst, 0, 0);
+		status = ft_exit(env, cmd_lst, 0, fds);
 	else if (builtin_id == FT_EXPORT)
 		status = ft_export(env, *cmd_lst);
 	else if (builtin_id == FT_PWD)
 		status = ft_pwd();
 	else if (builtin_id == FT_UNSET)
 		status = ft_unset(env, *cmd_lst);
-	if (solo == 0)
-		ft_exit(env, cmd_lst, status, 1);
+	if (!solo)
+	{
+		double_close(fds[0], fds[1]);
+		ft_exit(env, cmd_lst, status, NULL);
+	}
 	return (status);
 }
