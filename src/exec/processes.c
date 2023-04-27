@@ -16,7 +16,7 @@ void	loop_process(int *fds, t_cmd_lst **cmd_lst, t_list **env)
 {
 	char	*pathcmd;
 
-	if (open_files(&fds[0], &fds[1], *cmd_lst) == 1)
+	if (open_files(&fds[0], &fds[1], *cmd_lst, 0) == 1)
 	{
 		double_close(fds[0], fds[1]);
 		ft_exit(env, cmd_lst, 0, NULL);
@@ -71,7 +71,7 @@ int	solo_process(t_cmd_lst **cmd_lst, t_list **env, int *std_in_out)
 
 	fd_in_out[0] = 0;
 	fd_in_out[1] = 1;
-	if (open_files(&fd_in_out[0], &fd_in_out[1], *cmd_lst) == 1)
+	if (open_files(&fd_in_out[0], &fd_in_out[1], *cmd_lst, 0) == 1)
 		return (1);
 	if (dup2(fd_in_out[0], 0) < 0 || dup2(fd_in_out[1], 1) < 0)
 		return (perror("dup2"), errno);

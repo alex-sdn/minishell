@@ -12,17 +12,16 @@
 
 #include "minishell.h"
 
-int	open_files(int *in_fd, int *out, t_cmd_lst *cmds)
+int	open_files(int *in_fd, int *out, t_cmd_lst *cmds, int i)
 {
-	int	i;
-
-	i = 0;
 	while (i < cmds->file_amt)
 	{
-		if (cmds->file_type[i] == 1)
+		if (cmds->file_type[i] == 1 || cmds->file_type[i] == 4)
 		{
 			close(*in_fd);
 			*in_fd = open(cmds->files[i], O_RDONLY);
+			if (cmds->file_type[i] == 4)
+				my_unlink(cmds, i);
 			if (*in_fd < 0)
 				return (perror(cmds->files[i]), 1);
 		}

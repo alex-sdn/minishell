@@ -73,6 +73,22 @@ char	*get_last_str(char **tab)
 	return (tab[i - 1]);
 }
 
+void	my_unlink(t_cmd_lst *cmds, int i)
+{
+	int		j;
+	char	*filepath;
+
+	j = i;
+	while (++j < cmds->file_amt)
+		if (cmds->file_type[j] == 4)
+			return ;
+	filepath = ft_strjoin("./", cmds->files[i]);
+	if (!filepath)
+		return ;
+	unlink(filepath);
+	free(filepath);
+}
+
 int	convert_status(int status)
 {
 	if (status == 2)

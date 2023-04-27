@@ -38,7 +38,7 @@ int	fill_redirec(t_list *lst1, t_cmd_lst **cmd_lst, int f_cnt, int idx)
 		fd = open(doc, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (fd < 0)
 			return (free(doc), 1);
-		(*cmd_lst)->file_type[f_cnt] = 1;
+		(*cmd_lst)->file_type[f_cnt] = 4;
 		if (fill_heredoc(fd, lst1->next->content) == 1)
 			return (free(doc), 1);
 		(*cmd_lst)->files[f_cnt] = ft_strdup(doc);

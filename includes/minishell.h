@@ -131,7 +131,7 @@ int			lst_split_redirec(t_list **head, int i);
 char		**ft_split_quotes(char *s, char c);
 
 /**   EXEC   **/
-int			open_files(int *in_fd, int *out_fd, t_cmd_lst *cmd_lst);
+int			open_files(int *in_fd, int *out_fd, t_cmd_lst *cmd_lst, int i);
 void		err_access(t_cmd_lst *cmd_lst, int pos, int err);
 char		*check_access(char *cmd, t_list **env, int i);
 int			exec_pipes(int **pipes, t_cmd_lst **cmd_lst, t_list **env);
@@ -152,6 +152,7 @@ int			wait_procs(int **pipes, pid_t *proc_ids, int cmd_count,
 char		**get_paths(t_list **env);
 char		**create_env_tab(t_list *env);
 char		*get_last_str(char **tab);
+void		my_unlink(t_cmd_lst *cmds, int i);
 int			convert_status(int status);
 
 void		restore_std_in_out(int fd0, int fd1);
