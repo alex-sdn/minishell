@@ -24,13 +24,16 @@ void	loop_process(int *fds, t_cmd_lst **cmd_lst, t_list **env)
 	if (dup2(fds[0], 0) < 0 || dup2(fds[1], 1) < 0)
 	{
 		perror("dup2");
-		exit(errno);
+		ft_exit(env, cmd_lst, convert_status(errno), NULL);
 	}
 	if (is_builtin((*cmd_lst)->cmds[0]) > 0)
 		exit(exec_builtin(cmd_lst, env, 0, fds));
 	pathcmd = check_access((*cmd_lst)->cmds[0], env, -1);
 	if (pathcmd == NULL)
+	{
+		double_close(fds[0], fds[1]);
 		ft_exit(env, cmd_lst, convert_status(errno), NULL);
+	}
 	if (is_solo_cat(*cmd_lst) == 1)
 		init_signal(S_CAT);
 	execve(pathcmd, (*cmd_lst)->cmds, create_env_tab(*env));
@@ -93,8 +96,6 @@ int	exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo, int *fds)
 		status = ft_echo(*cmd_lst);
 	else if (builtin_id == FT_ENV)
 		status = ft_env(*env, *cmd_lst);
-	else if (builtin_id == FT_EXIT)
-		status = ft_exit(env, cmd_lst, 0, fds);
 	else if (builtin_id == FT_EXPORT)
 		status = ft_export(env, *cmd_lst);
 	else if (builtin_id == FT_PWD)
@@ -106,5 +107,7 @@ int	exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo, int *fds)
 		double_close(fds[0], fds[1]);
 		ft_exit(env, cmd_lst, status, NULL);
 	}
+	else if (builtin_id == FT_EXIT)
+		status = ft_exit(env, cmd_lst, 0, fds);
 	return (status);
 }

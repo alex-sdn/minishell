@@ -20,7 +20,6 @@ static void	reset_fds(int *std_in_out)
 	dup2(std_in_out[1], 1);
 	close(std_in_out[0]);
 	close(std_in_out[1]);
-	printf("exit\n");
 }
 
 static int	check_maxmin(long long status, char *nbr)
@@ -93,7 +92,11 @@ int	ft_exit(t_list **env, t_cmd_lst **cmd_lst, int status, int *std_in_out)
 {
 	if (cmd_lst && ft_strncmp("exit", (*cmd_lst)->cmds[0], 4) == 0
 		&& ft_strlen((*cmd_lst)->cmds[0]) == 4 && (*cmd_lst)->cmds[1])
+	{
+		if (std_in_out)
+			printf("exit\n");
 		status = get_exit_status((*cmd_lst)->cmds);
+	}
 	if (status >= 0)
 	{
 		if (std_in_out)
