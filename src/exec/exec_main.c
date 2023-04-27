@@ -95,7 +95,7 @@ int	exec_pipes(int **pipes, t_cmd_lst **cmd_lst, t_list **env)
 	{
 		proc_ids[i] = fork();
 		if (proc_ids[i] < 0)
-			return (perror("fork"), free(proc_ids), errno);
+			return (perror("fork"), free(proc_ids), 128);
 		if (proc_ids[i] == 0)
 		{
 			free(proc_ids);

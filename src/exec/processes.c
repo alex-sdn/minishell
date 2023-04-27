@@ -49,7 +49,7 @@ static int	solo_proc_2(t_cmd_lst **cmd_lst, t_list **env, char *path, int *fd)
 		init_signal(S_CAT);
 	proc_id = fork();
 	if (proc_id < 0)
-		return (perror("fork"), free(path), errno);
+		return (perror("fork"), free(path), 128);
 	if (proc_id == 0)
 	{
 		close(fd[0]);
