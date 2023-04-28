@@ -20,7 +20,7 @@ static int	get_next_diff(char *str, int pos)
 	while (str[pos] && is_special(str[pos]) == 0)
 		pos++;
 	next_diff -= pos;
-	return (next_diff);	
+	return (next_diff);
 }
 
 static int	has_env_var(char *str, int i)
