@@ -158,6 +158,7 @@ int			convert_status(int status);
 void		restore_std_in_out(int fd0, int fd1);
 void		double_close(int fd1, int fd2);
 int			is_builtin(char *cmd);
+int			is_dotdot(char *cmd);
 int			is_solo_cat(t_cmd_lst *cmd_lst);
 
 char		**ft_split_pipex(char const *s, char c);

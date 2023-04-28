@@ -47,13 +47,13 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-// int	is_dotdot(char *cmd)
-// {
-// 	if ((ft_strlen(cmd) == 1 && strncmp(cmd, ".", 1) == 0)
-// 		|| (ft_strlen(cmd) == 2 && strncmp(cmd, "..", 2) == 0))
-// 		return (1);
-// 	return (0);
-// }
+int	is_dotdot(char *cmd)
+{
+	if ((ft_strlen(cmd) == 1 && strncmp(cmd, ".", 1) == 0)
+		|| (ft_strlen(cmd) == 2 && strncmp(cmd, "..", 2) == 0))
+		return (1);
+	return (0);
+}
 
 int	is_solo_cat(t_cmd_lst *cmd_lst)
 {

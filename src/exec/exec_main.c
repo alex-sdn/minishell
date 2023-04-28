@@ -57,7 +57,7 @@ char	*check_access(char *cmd, t_list **env, int i)
 	char	**paths;
 	char	*pathcmd;
 
-	if (!cmd || !cmd[0])  // VERIF . ET .. (is_dotdot == 1)
+	if (!cmd || !cmd[0] || is_dotdot(cmd) == 1)
 	{
 		errno = 127;
 		if (!cmd)
