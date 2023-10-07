@@ -22,10 +22,11 @@ void	restore_std_in_out(int fd0, int fd1)
 	close(fd1);
 }
 
-void	double_close(int fd1, int fd2)
+void	free_pipes(int **pipes, int size)
 {
-	close(fd1);
-	close(fd2);
+	while (size-- > 0)
+		free(pipes[size]);
+	free(pipes);
 }
 
 int	is_builtin(char *cmd)

@@ -32,6 +32,12 @@ int	is_spaces(char *str)
 	return (0);
 }
 
+void	double_close(int fd1, int fd2)
+{
+	close(fd1);
+	close(fd2);
+}
+
 char	*triple_strjoin(char *str1, char *str2, char *str3)
 {
 	char	*new1;

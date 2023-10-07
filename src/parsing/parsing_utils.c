@@ -14,6 +14,7 @@
 
 int	check_pipes(char *input, int i)
 {
+	g_sig++;
 	while (input[i] == ' ')
 		i++;
 	if (input[i] == '|')
@@ -36,6 +37,7 @@ int	check_pipes(char *input, int i)
 		i--;
 	if (input[i] == '|')
 		return (printf_error(ERR_SNTX, "|"), 1);
+	g_sig--;
 	return (0);
 }
 
@@ -44,6 +46,7 @@ int	check_quotes(char *input)
 	int	i;
 
 	i = 0;
+	g_sig++;
 	while (input[i])
 	{
 		if (input[i] == '\'')
@@ -60,6 +63,7 @@ int	check_quotes(char *input)
 		}
 		i++;
 	}
+	g_sig--;
 	return (0);
 }
 

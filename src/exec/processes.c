@@ -19,7 +19,7 @@ void	loop_process(int *fds, t_cmd_lst **cmd_lst, t_list **env)
 	if (open_files(&fds[0], &fds[1], *cmd_lst, 0) == 1)
 	{
 		double_close(fds[0], fds[1]);
-		ft_exit(env, cmd_lst, 0, NULL);
+		ft_exit(env, cmd_lst, 1, NULL);
 	}
 	if (dup2(fds[0], 0) < 0 || dup2(fds[1], 1) < 0)
 	{

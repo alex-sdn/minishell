@@ -34,13 +34,6 @@ int	**init_pipes(int size)
 	return (pipes);
 }
 
-void	free_pipes(int **pipes, int size)
-{
-	while (size-- > 0)
-		free(pipes[size]);
-	free(pipes);
-}
-
 void	start_process(int i, int **pipes, t_cmd_lst **cmd_lst, t_list **env)
 {
 	int	j;
@@ -74,6 +67,17 @@ static void	close_pipes(int **pipes, int pos, int cmd_count)
 		close(pipes[pos][1]);
 }
 
+static int	wait_status(int status)
+{
+	if (g_sig == 0 && status == -1)
+	{
+		g_sig = 1;
+		return (130);
+	}
+	g_sig = 1;
+	return (status);
+}
+
 int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 {
 	int		i;
@@ -82,6 +86,7 @@ int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 	pid_t	finished;
 
 	i = cmd_count;
+	status[1] = -1;
 	while (i > 0)
 	{
 		pos = 0;
@@ -91,14 +96,12 @@ int	wait_procs(int **pipes, pid_t *proc_ids, int cmd_count, t_cmd_lst *cmd_lst)
 			while (finished != proc_ids[pos])
 				pos++;
 			close_pipes(pipes, pos, cmd_count);
-			if (pos == cmd_count - 1)
+			if (pos == cmd_count - 1 && g_sig == 1)
 				status[1] = status[0] / 256;
 			if (status[0] / 256 == 127 || status[0] / 256 == 126)
 				err_access(cmd_lst, pos, status[0] / 256);
 			i--;
 		}
 	}
-	if (g_sig == 0)
-		status[1] = 130;
-	return (status[1]);
+	return (wait_status(status[1]));
 }

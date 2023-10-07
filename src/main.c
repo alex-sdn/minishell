@@ -25,10 +25,10 @@ void	prompt_loop(t_list **env, t_cmd_lst *cmd_lst, int status)
 		if (g_sig < 0)
 			status = 130;
 		if (!input)
-			ft_exit(env, NULL, 0, 0);
+			ft_exit(env, NULL, status, 0);
 		add_history(input);
 		if (is_spaces(input) == 1)
-			status = 0;
+			g_sig = 1;
 		else if (check_pipes(input, 0) == 1 || check_quotes(input) == 1)
 			status = 2;
 		else

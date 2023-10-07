@@ -86,6 +86,7 @@ int			ft_unset(t_list **env, t_cmd_lst *cmd_lst);
 /**   UTILS   **/
 int			is_special(char c);
 int			is_spaces(char *str);
+void		double_close(int fd1, int fd2);
 char		*triple_strjoin(char *str1, char *str2, char *str3);
 void		printf_error(char *str, char *arg);
 
@@ -143,7 +144,6 @@ int			exec_builtin(t_cmd_lst **cmd_lst, t_list **env, int solo,
 				int *fds);
 
 int			**init_pipes(int size);
-void		free_pipes(int **pipes, int size);
 void		start_process(int i, int **pipes, t_cmd_lst **cmd_lst,
 				t_list **env);
 int			wait_procs(int **pipes, pid_t *proc_ids, int cmd_count,
@@ -156,7 +156,7 @@ void		my_unlink(t_cmd_lst *cmds, int i);
 int			convert_status(int status);
 
 void		restore_std_in_out(int fd0, int fd1);
-void		double_close(int fd1, int fd2);
+void		free_pipes(int **pipes, int size);
 int			is_builtin(char *cmd);
 int			is_dotdot(char *cmd);
 int			is_solo_cat(t_cmd_lst *cmd_lst);
